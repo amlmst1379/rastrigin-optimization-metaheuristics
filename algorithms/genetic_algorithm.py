@@ -1,32 +1,29 @@
-#Genteic algorithm implementation
 import numpy as np
-from utils.rastrigin import rastrigin
+from Rastrigin import rastrigin
 
 
 def genetic_algorithm(
     #At first, we will generate our population 
-    pop_size=50, generations=100, crossover_rate=0.8, mutation_rate=0.1, bounds=(-5.12, 5.12)
+    population_size=50, generations=100, crossover_rate=0.8, mutation_rate=0.1, bounds=(-5.12, 5.12)
 ):
     #Our analysis is for two dimensions
     dim = 2  # 2D: x and y
     lb, ub = bounds
 
-    # Initialize population
-    population = np.random.uniform(lb, ub, (pop_size, dim))
+    population = np.random.uniform(lb, ub, (population_size, dim)) #the population initialization
 
-    # Evaluate initial fitness
-    fitness = np.array([rastrigin(ind) for ind in population])
+    fitness = np.array([rastrigin(ind) for ind in population]) #initial fitness
 
-    best_fitness_per_gen = [] #To store the best fitness value per generation
+    best_fitness_per_gen = [] #to store the best fitness value per generation
     best_solution = population[np.argmin(fitness)] #best solution that contains the best value for fitness
-    best_fitness = np.min(fitness) #The minimum fitness per generation
+    best_fitness = np.min(fitness) #The minimum fitness overall
 
     # Evolution loop
     for gen in range(generations):
         #New population from the existing parents population to be filled
         new_population = []
 
-        for _ in range(pop_size // 2):  # Each iteration creates 2 children
+        for _ in range(population_size // 2):  # Each iteration creates 2 children
             # Selection of parents (better performing guesses) for the generated children 
             parents = selection(population, fitness, k=3)
 
@@ -43,7 +40,7 @@ def genetic_algorithm(
         population = np.array(new_population)
         fitness = np.array([rastrigin(ind) for ind in population])
 
-        # Saving best result of this generation
+        # Saving the best result of this generation
         gen_best_idx = np.argmin(fitness)
         gen_best_fit = fitness[gen_best_idx]
 
